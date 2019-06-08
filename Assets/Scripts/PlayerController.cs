@@ -20,17 +20,32 @@ public class PlayerController : MonoBehaviour {
 
     private bool pulando;
 
+    private Camera camera;
+
+    private Material matFundo;
+
+    public Renderer renderer;
+
+    public float velocidadeFundo;
+
+    public bool morreu;
+
     // Start is called before the first frame update
     void Start() {
         pulando = false;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        camera = Camera.main;
+        matFundo = renderer.material;
+        morreu = false;
     }
 
     // Update is called once per frame
     void Update() {
-        checaPulo();
-        checaMovimento();
+        if (!morreu) {
+            checaPulo();
+            checaMovimento();
+        }
     }
 
     private void checaPulo() {
@@ -54,5 +69,18 @@ public class PlayerController : MonoBehaviour {
             transform.localScale = new Vector3(escalaX, transform.localScale.y, transform.localScale.z);
         }
         anim.SetBool("Correndo", deslocX != 0 && !pulando);
+
+        Vector3 posCam = new Vector3(novoX, camera.transform.position.y, camera.transform.position.z);
+        camera.transform.position = posCam;
+
+        Vector2 teste = matFundo.mainTextureOffset;
+        matFundo.mainTextureOffset = new Vector2(teste.x + addX * velocidadeFundo, teste.y);
+    }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.tag == "Pedra") {
+            morreu = true;
+            anim.SetBool("Esmagado", true);
+        }
     }
 }
