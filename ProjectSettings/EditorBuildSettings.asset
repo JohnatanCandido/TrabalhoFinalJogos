@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Fase1.unity
+    path: Assets/Scenes/FaseFloresta.unity
     guid: 324ebf25efc16564991074711673fc38
   m_configObjects: {}

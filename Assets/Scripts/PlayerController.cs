@@ -70,15 +70,39 @@ public class PlayerController : MonoBehaviour {
         }
         anim.SetBool("Correndo", deslocX != 0 && !pulando);
 
+        trataCamera(novoX, addX);
+    }
+
+    private void trataCamera(float novoX, float addX) {
         Vector3 posCam = new Vector3(novoX, camera.transform.position.y, camera.transform.position.z);
         camera.transform.position = posCam;
 
-        Vector2 teste = matFundo.mainTextureOffset;
-        matFundo.mainTextureOffset = new Vector2(teste.x + addX * velocidadeFundo, teste.y);
+        if (matFundo != null) {
+            Vector2 offsetTextura = matFundo.mainTextureOffset;
+            matFundo.mainTextureOffset = new Vector2(offsetTextura.x + addX * velocidadeFundo, offsetTextura.y);
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Pedra") {
+    private void OnCollisionEnter2D(Collision2D other) {
+        Collider2D collider = other.collider;
+  
+        if(collider.name == "Enemy") {
+            Vector3 contactPoint = other.contacts[0].point;
+            Vector3 center = collider.bounds.center;
+ 
+            if (contactPoint.y > center.y) {
+                Destroy(collider.gameObject);
+                Vector2 forca = new Vector2(0, forcaAplicar * 0.8F);
+                rb.AddForce(forca);
+            } else {
+                morreu = true;
+                anim.SetBool("Esmagado", true);
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.tag == "Pedra" || other.gameObject.tag == "Trap") {
             morreu = true;
             anim.SetBool("Esmagado", true);
         }

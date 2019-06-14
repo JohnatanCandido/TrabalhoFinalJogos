@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pedra
   - Enemy
+  - Trap
   layers:
   - Default
   - TransparentFX
