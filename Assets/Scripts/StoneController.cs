@@ -20,4 +20,11 @@ public class StoneController : MonoBehaviour {
         transform.position = new Vector3(transform.position.x + velocidade, transform.position.y, transform.position.z);
         rb.rotation -= rotacao;
     }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.collider.tag == "Barreira") {
+            velocidade = 0F;
+            rotacao = 0F;
+        }
+    }
 }

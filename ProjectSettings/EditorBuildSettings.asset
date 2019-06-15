@@ -8,4 +8,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FaseFloresta.unity
     guid: 324ebf25efc16564991074711673fc38
+  - enabled: 1
+    path: Assets/Scenes/TelaInicial.unity
+    guid: 80138854efcf47842a31035aeeff53de
+  - enabled: 1
+    path: Assets/Scenes/FaseAgua.unity
+    guid: 2c0e7cde77f87024daac223dfbfe523f
+  - enabled: 1
+    path: Assets/Scenes/FaseCastelo.unity
+    guid: 534a2e7f46f9b2048b89bc4c6a273c65
+  - enabled: 1
+    path: Assets/Scenes/FaseTrem.unity
+    guid: c1c3f544e95a419479c9310c60f4b304
   m_configObjects: {}

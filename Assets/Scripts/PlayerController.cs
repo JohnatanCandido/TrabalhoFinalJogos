@@ -30,13 +30,17 @@ public class PlayerController : MonoBehaviour {
 
     public bool morreu;
 
+    private GameObject fish;
+
     // Start is called before the first frame update
     void Start() {
         pulando = false;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        camera = Camera.main;
-        matFundo = renderer.material;
+        if (renderer != null) {
+            camera = Camera.main;
+            matFundo = renderer.material;
+        }
         morreu = false;
     }
 
@@ -45,6 +49,8 @@ public class PlayerController : MonoBehaviour {
         if (!morreu) {
             checaPulo();
             checaMovimento();
+        } else if (fish != null) {
+            transform.position = fish.transform.position;
         }
     }
 
@@ -58,6 +64,11 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void checaMovimento() {
+        if (transform.position.y < 0F) {
+            morreu = true;
+            anim.SetBool("Esmagado", true);
+            return;
+        }
         float deslocX = Input.GetAxisRaw("Horizontal");
         float addX = Input.GetAxisRaw("Horizontal") * velocidade * Time.deltaTime;
         float novoX = transform.position.x + addX;
@@ -74,10 +85,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void trataCamera(float novoX, float addX) {
-        Vector3 posCam = new Vector3(novoX, camera.transform.position.y, camera.transform.position.z);
-        camera.transform.position = posCam;
-
         if (matFundo != null) {
+            Vector3 posCam = new Vector3(novoX, camera.transform.position.y, camera.transform.position.z);
+            camera.transform.position = posCam;
             Vector2 offsetTextura = matFundo.mainTextureOffset;
             matFundo.mainTextureOffset = new Vector2(offsetTextura.x + addX * velocidadeFundo, offsetTextura.y);
         }
@@ -86,7 +96,7 @@ public class PlayerController : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D other) {
         Collider2D collider = other.collider;
   
-        if(collider.name == "Enemy") {
+        if(collider.tag == "Enemy") {
             Vector3 contactPoint = other.contacts[0].point;
             Vector3 center = collider.bounds.center;
  
@@ -98,6 +108,10 @@ public class PlayerController : MonoBehaviour {
                 morreu = true;
                 anim.SetBool("Esmagado", true);
             }
+        } else if (collider.tag == "Fish") {
+            fish = collider.gameObject;
+            morreu = true;
+            anim.SetBool("Esmagado", true);
         }
     }
 
@@ -105,6 +119,6 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.tag == "Pedra" || other.gameObject.tag == "Trap") {
             morreu = true;
             anim.SetBool("Esmagado", true);
-        }
+        } 
     }
 }
