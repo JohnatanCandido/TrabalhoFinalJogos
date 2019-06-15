@@ -9,6 +9,7 @@ TagManager:
   - Trap
   - Fish
   - Barreira
+  - Boss
   layers:
   - Default
   - TransparentFX

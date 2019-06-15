@@ -24,7 +24,6 @@ public class EnemyController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        print(anim.GetBool("Andando"));
         if (anim.GetBool("Andando") && Time.time - lastAnim <= tempoAnim) {
             float novoX = transform.position.x + (velocidade * Time.deltaTime);
             transform.position = new Vector3(novoX, transform.position.y, transform.position.z);
@@ -37,6 +36,5 @@ public class EnemyController : MonoBehaviour {
                 transform.localScale = new Vector3(escalaX, transform.localScale.y, transform.localScale.z);
             }
         }
-        
     }
 }

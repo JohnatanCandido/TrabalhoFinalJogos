@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour {
             checaPulo();
             checaMovimento();
         } else if (fish != null) {
-            transform.position = fish.transform.position;
+            transform.position = new Vector3(fish.transform.position.x, fish.transform.position.y + 1, fish.transform.position.z);
         }
     }
 
@@ -95,21 +95,38 @@ public class PlayerController : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D other) {
         Collider2D collider = other.collider;
-  
+        Vector3 contactPoint = other.contacts[0].point;
+        Vector3 center = collider.bounds.center;
+
         if(collider.tag == "Enemy") {
-            Vector3 contactPoint = other.contacts[0].point;
-            Vector3 center = collider.bounds.center;
- 
-            if (contactPoint.y > center.y) {
+            colisaoEnemy(contactPoint, collider, center);
+        } else if (collider.tag == "Boss") {
+            colisaoBoss(contactPoint, center);
+        }
+    }
+
+    private void colisaoEnemy(Vector3 contactPoint, Collider2D collider, Vector3 center) {
+        if (contactPoint.y > center.y) {
                 Destroy(collider.gameObject);
                 Vector2 forca = new Vector2(0, forcaAplicar * 0.8F);
                 rb.AddForce(forca);
             } else {
                 morreu = true;
                 anim.SetBool("Esmagado", true);
-            }
-        } else if (collider.tag == "Fish") {
-            fish = collider.gameObject;
+        }
+    }
+
+    private void colisaoFish(GameObject gameObject) {
+        fish = gameObject;
+        morreu = true;
+        anim.SetBool("Esmagado", true);
+    }
+
+    private void colisaoBoss(Vector3 contactPoint, Vector3 center) {
+        if (contactPoint.y > 1.6F) {
+            Vector2 forca = new Vector2(0, forcaAplicar);
+            rb.AddForce(forca);
+        } else {
             morreu = true;
             anim.SetBool("Esmagado", true);
         }
@@ -119,6 +136,8 @@ public class PlayerController : MonoBehaviour {
         if (other.gameObject.tag == "Pedra" || other.gameObject.tag == "Trap") {
             morreu = true;
             anim.SetBool("Esmagado", true);
-        } 
+        } else if (other.gameObject.tag == "Fish") {
+            colisaoFish(other.gameObject);
+        }
     }
 }

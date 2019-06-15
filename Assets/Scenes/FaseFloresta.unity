@@ -593,7 +593,7 @@ GameObject:
   - component: {fileID: 1529470804}
   - component: {fileID: 1529470802}
   m_Layer: 9
-  m_Name: placeholder
+  m_Name: Fundo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -915,12 +915,12 @@ PrefabInstance:
     - target: {fileID: 5156821828824502869, guid: a249ab6e94085ee4799af2aa141877d6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24
+      value: -25.38
       objectReference: {fileID: 0}
     - target: {fileID: 5156821828824502869, guid: a249ab6e94085ee4799af2aa141877d6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.4
+      value: 4.1
       objectReference: {fileID: 0}
     - target: {fileID: 5156821828824502869, guid: a249ab6e94085ee4799af2aa141877d6,
         type: 3}
@@ -966,6 +966,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5156821828824502871, guid: a249ab6e94085ee4799af2aa141877d6,
+        type: 3}
+      propertyPath: velocidade
+      value: 0.083
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a249ab6e94085ee4799af2aa141877d6, type: 3}
