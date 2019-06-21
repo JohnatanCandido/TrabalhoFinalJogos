@@ -10,6 +10,7 @@ TagManager:
   - Fish
   - Barreira
   - Boss
+  - FundoFaseTrem
   layers:
   - Default
   - TransparentFX
@@ -52,4 +53,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2192706659
+    locked: 0
+  - name: Trem
+    uniqueID: 850165391
     locked: 0

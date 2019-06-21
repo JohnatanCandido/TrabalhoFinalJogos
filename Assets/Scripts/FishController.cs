@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class FishController : MonoBehaviour {
 
     public float jumpTime;
 
-    private float lastJump;
+    public float lastJump;
 
     public float jumpForce;
 
@@ -23,6 +24,13 @@ public class FishController : MonoBehaviour {
             Vector2 forca = new Vector2(0, jumpForce);
             rb.AddForce(forca);
             lastJump = Time.time;
+        }
+        if (transform.position.y > 4.5F) {
+            float escalaY = Math.Abs(transform.localScale.y) * -1;
+            transform.localScale = new Vector3(transform.localScale.x, escalaY, transform.localScale.z);
+        } else if (transform.position.y < -2F) {
+            float escalaY = Math.Abs(transform.localScale.y);
+            transform.localScale = new Vector3(transform.localScale.x, escalaY, transform.localScale.z);
         }
     }
         

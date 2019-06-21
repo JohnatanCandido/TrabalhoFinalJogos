@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
@@ -32,9 +33,17 @@ public class PlayerController : MonoBehaviour {
 
     private GameObject fish;
 
+    public float finishLine;
+
+    private bool ganhou;
+
+    private float timeOfEndgame;
+
     // Start is called before the first frame update
     void Start() {
+        timeOfEndgame = -1F;
         pulando = false;
+        ganhou = false;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         if (renderer != null) {
@@ -46,11 +55,23 @@ public class PlayerController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!morreu) {
+        if (!morreu && !ganhou) {
+            if (transform.position.x > finishLine) {
+                ganhou = true;
+                timeOfEndgame = Time.time;
+            }
             checaPulo();
             checaMovimento();
         } else if (fish != null) {
             transform.position = new Vector3(fish.transform.position.x, fish.transform.position.y + 1, fish.transform.position.z);
+        }
+
+        if (timeOfEndgame > 0 && Time.time - timeOfEndgame > 2F) {
+            if (morreu) {
+               MainController.die();
+            } else if (ganhou) {
+                MainController.win();
+            }
         }
     }
 
@@ -65,8 +86,7 @@ public class PlayerController : MonoBehaviour {
 
     private void checaMovimento() {
         if (transform.position.y < 0F) {
-            morreu = true;
-            anim.SetBool("Esmagado", true);
+            morrer();
             return;
         }
         float deslocX = Input.GetAxisRaw("Horizontal");
@@ -88,8 +108,13 @@ public class PlayerController : MonoBehaviour {
         if (matFundo != null) {
             Vector3 posCam = new Vector3(novoX, camera.transform.position.y, camera.transform.position.z);
             camera.transform.position = posCam;
-            Vector2 offsetTextura = matFundo.mainTextureOffset;
-            matFundo.mainTextureOffset = new Vector2(offsetTextura.x + addX * velocidadeFundo, offsetTextura.y);
+            if (renderer.tag != "FundoFaseTrem") {
+                Vector2 offsetTextura = matFundo.mainTextureOffset;
+                matFundo.mainTextureOffset = new Vector2(offsetTextura.x + addX * velocidadeFundo, offsetTextura.y);
+            } else {
+                Vector2 offsetTextura = matFundo.mainTextureOffset;
+                matFundo.mainTextureOffset = new Vector2(offsetTextura.x + ((0.05F - (addX / 200)) * velocidadeFundo), offsetTextura.y);
+            }
         }
     }
 
@@ -107,19 +132,16 @@ public class PlayerController : MonoBehaviour {
 
     private void colisaoEnemy(Vector3 contactPoint, Collider2D collider, Vector3 center) {
         if (contactPoint.y > center.y) {
-                Destroy(collider.gameObject);
                 Vector2 forca = new Vector2(0, forcaAplicar * 0.8F);
                 rb.AddForce(forca);
             } else {
-                morreu = true;
-                anim.SetBool("Esmagado", true);
+                morrer();
         }
     }
 
     private void colisaoFish(GameObject gameObject) {
         fish = gameObject;
-        morreu = true;
-        anim.SetBool("Esmagado", true);
+        morrer();
     }
 
     private void colisaoBoss(Vector3 contactPoint, Vector3 center) {
@@ -127,17 +149,21 @@ public class PlayerController : MonoBehaviour {
             Vector2 forca = new Vector2(0, forcaAplicar);
             rb.AddForce(forca);
         } else {
-            morreu = true;
-            anim.SetBool("Esmagado", true);
+            morrer();
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag == "Pedra" || other.gameObject.tag == "Trap") {
-            morreu = true;
-            anim.SetBool("Esmagado", true);
+            morrer();
         } else if (other.gameObject.tag == "Fish") {
             colisaoFish(other.gameObject);
         }
+    }
+
+    private void morrer() {
+        morreu = true;
+        anim.SetBool("Esmagado", true);
+        timeOfEndgame = Time.time;
     }
 }

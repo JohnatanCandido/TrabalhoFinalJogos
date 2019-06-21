@@ -10,6 +10,8 @@ public class StoneController : MonoBehaviour {
 
     private Rigidbody2D rb;
 
+    public GameObject player;
+
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody2D>();
@@ -17,8 +19,10 @@ public class StoneController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        transform.position = new Vector3(transform.position.x + velocidade, transform.position.y, transform.position.z);
-        rb.rotation -= rotacao;
+        if (player.transform.position.x > -15F) {
+            transform.position = new Vector3(transform.position.x + velocidade, transform.position.y, transform.position.z);
+            rb.rotation -= rotacao;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
