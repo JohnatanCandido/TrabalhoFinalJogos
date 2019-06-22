@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour {
                 matFundo.mainTextureOffset = new Vector2(offsetTextura.x + addX * velocidadeFundo, offsetTextura.y);
             } else {
                 Vector2 offsetTextura = matFundo.mainTextureOffset;
-                matFundo.mainTextureOffset = new Vector2(offsetTextura.x + ((0.05F - (addX / 200)) * velocidadeFundo), offsetTextura.y);
+                matFundo.mainTextureOffset = new Vector2(offsetTextura.x + ((0.09F - (addX / 200)) * velocidadeFundo), offsetTextura.y);
             }
         }
     }
@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour {
         Vector3 contactPoint = other.contacts[0].point;
         Vector3 center = collider.bounds.center;
 
-        if(collider.tag == "Enemy") {
+        if (collider.tag == "Enemy") {
             colisaoEnemy(contactPoint, collider, center);
         } else if (collider.tag == "Boss") {
             colisaoBoss(contactPoint, center);
@@ -158,6 +158,11 @@ public class PlayerController : MonoBehaviour {
             morrer();
         } else if (other.gameObject.tag == "Fish") {
             colisaoFish(other.gameObject);
+        } else if (other.gameObject.tag == "Spell") {
+            Destroy(other.gameObject);
+            if (!morreu) {
+                morrer();
+            }
         }
     }
 

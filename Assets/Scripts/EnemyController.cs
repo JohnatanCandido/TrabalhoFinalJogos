@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour {
 
-    public Animator anim;
+    private Animator anim;
 
     private float posInicial;
 
@@ -16,17 +17,26 @@ public class EnemyController : MonoBehaviour {
 
     public bool attack;
 
+    private float lastAttack;
+
     public GameObject player;
 
     private float timeOfDeath;
 
     public float deathPoint;
 
+    public GameObject objAttack;
+
+    public Transform refAttack;
+
+    private bool geraAttack;
+
     // Start is called before the first frame update
     void Start() {
         anim = GetComponent<Animator>();
         posInicial = transform.position.x;
         lastAnim = Time.time;
+        lastAttack = 0F;
         anim.SetBool("Andando", false);
     }
 
@@ -34,23 +44,27 @@ public class EnemyController : MonoBehaviour {
     void Update() {
         checaMorte();
         if (!anim.GetBool("Morreu")) {
-            if (anim.GetBool("Andando") && Time.time - lastAnim <= tempoAnim) {
-                float novoX = transform.position.x + (velocidade * Time.deltaTime);
-                transform.position = new Vector3(novoX, transform.position.y, transform.position.z);
-            } else if (Time.time - lastAnim > tempoAnim) {
-                anim.SetBool("Andando", !anim.GetBool("Andando"));
-                lastAnim = Time.time;
-                if (anim.GetBool("Andando")) {
-                    float escalaX = -transform.localScale.x;
-                    velocidade = -velocidade;
-                    transform.localScale = new Vector3(escalaX, transform.localScale.y, transform.localScale.z);
-                }
+            if (attack) {
+                checaAtacar();
+            } else {
+                andar();
             }
         }
     }
 
-    private void checaAtacar() {
-
+    private void andar() {
+        if (anim.GetBool("Andando") && Time.time - lastAnim <= tempoAnim) {
+            float novoX = transform.position.x + (velocidade * Time.deltaTime);
+            transform.position = new Vector3(novoX, transform.position.y, transform.position.z);
+        } else if (Time.time - lastAnim > tempoAnim) {
+            anim.SetBool("Andando", !anim.GetBool("Andando"));
+            lastAnim = Time.time;
+            if (anim.GetBool("Andando")) {
+                float escalaX = -transform.localScale.x;
+                velocidade = -velocidade;
+                transform.localScale = new Vector3(escalaX, transform.localScale.y, transform.localScale.z);
+            }
+        }
     }
 
     private void checaMorte() {
@@ -67,5 +81,30 @@ public class EnemyController : MonoBehaviour {
                 timeOfDeath = Time.time;
             }
         }
+    }
+
+    private void checaAtacar() {
+        mudaDirecao();
+        if (Math.Abs(player.transform.position.x - transform.position.x) < 11F && Time.time - lastAttack > 2.5F) {
+            geraAttack = true;
+            anim.SetBool("Atacar", true);
+            lastAttack = Time.time;
+        } else if (Time.time - lastAttack > 1F) {
+            anim.SetBool("Atacar", false);
+        } else if (geraAttack && Time.time - lastAttack > 0.5F) {
+            geraAttack = false;
+            GameObject objNovo = Instantiate(objAttack, refAttack.position, refAttack.rotation);
+            if (transform.localScale.x < 0) {
+                objNovo.GetComponent<EnemyFireController>().setDirecao(-1);
+            }
+        }
+    }
+
+    private void mudaDirecao() {
+        float escalaX = Math.Abs(transform.localScale.x);
+        if (player.transform.position.x < transform.position.x) {
+            escalaX = -Math.Abs(transform.localScale.x);
+        }
+        transform.localScale = new Vector3(escalaX, transform.localScale.y, transform.localScale.z);
     }
 }

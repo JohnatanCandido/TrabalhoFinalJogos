@@ -11,6 +11,7 @@ TagManager:
   - Barreira
   - Boss
   - FundoFaseTrem
+  - Spell
   layers:
   - Default
   - TransparentFX
