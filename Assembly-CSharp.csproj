@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\ArmadilhaController.cs" />
      <Compile Include="Assets\Scripts\BossController.cs" />
+     <Compile Include="Assets\Scripts\BossSpellController.cs" />
      <Compile Include="Assets\Scripts\EnemyController.cs" />
      <Compile Include="Assets\Scripts\EnemyFireController.cs" />
      <Compile Include="Assets\Scripts\FishController.cs" />

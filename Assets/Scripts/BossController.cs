@@ -23,12 +23,24 @@ public class BossController : MonoBehaviour {
 
     private Rigidbody2D rb;
 
+    private float lastAttack;
+
+    public GameObject player;
+
+    public GameObject objAttack;
+
+    public Transform refAttack;
+
+    private float atkTime;
+
     // Start is called before the first frame update
     void Start() {
         currPos = -1;
         lastPosIndex = -1;
         initBossPositions();
         lastPosTime = Time.time;
+        lastAttack = Time.time;
+        atkTime = 2F;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
@@ -45,12 +57,15 @@ public class BossController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (!anim.GetBool("Morreu")) {
+        if (!anim.GetBool("Morreu") && !player.GetComponent<PlayerController>().morreu) {
             transform.position = Vector3.MoveTowards(transform.position, positions[currPos], speed * Time.deltaTime);
             if (Time.time - lastPosTime > posTime) {
                 changePosition();
             }
             checaDirecao();
+            if (deveAtirar()) {
+                atirar();
+            }
         }
 
     }
@@ -81,14 +96,64 @@ public class BossController : MonoBehaviour {
         Vector3 contactPoint = other.contacts[0].point;
         Vector3 center = collider.bounds.center;
 
-        if (contactPoint.y > 1.6F) {
-            hp--;
-            if (hp == 0) {
-                anim.SetBool("Morreu", true);
-                rb.gravityScale = 1;
-            } else {
-                changePosition();
-            }
+        if (contactPoint.y < center.y) {
+            try {
+                other.gameObject.GetComponent<PlayerController>().pular(1.5F);
+                if (other.gameObject.GetComponent<PlayerController>().morreu) {
+                    return;
+                }
+                hp--;
+                print("HP: " + hp);
+                if (hp == 0) {
+                    anim.SetBool("Morreu", true);
+                    rb.gravityScale = 1;
+                } else {
+                    rb.gravityScale = 0;
+                    changePosition();
+                }
+            } catch {}
+        } else {
+            other.gameObject.GetComponent<PlayerController>().morrer();
+        }
+    }
+
+    private bool deveAtirar() {
+        return transform.position == positions[currPos] && Time.time - lastAttack > atkTime;
+    }
+
+    private void atirar() {
+        lastAttack = Time.time;
+        System.Random rand = new System.Random();
+        if (rand.Next(4) < 3) {
+            tiro1();
+        } else {
+            tiro2();
+        }
+    }
+
+    private void tiro1() {
+        geraTiro(player.transform.position);
+    }
+
+    private void tiro2() {
+        System.Random rand = new System.Random();
+        float espacamento = rand.Next(4) + 2F;
+        Vector3 pos1 = new Vector3(player.transform.position.x + espacamento, player.transform.position.y + espacamento, player.transform.position.z);
+        geraTiro(pos1);
+
+        Vector3 pos2 = new Vector3(player.transform.position.x - espacamento, player.transform.position.y - espacamento, player.transform.position.z);
+        geraTiro(pos2);
+    }
+
+    private void geraTiro(Vector3 position) {
+        GameObject objNovo = Instantiate(objAttack, refAttack.position, refAttack.rotation);
+        var heading = position - transform.position;
+        var distance = heading.magnitude;
+        var dir = heading / distance;
+        if (hp > 3) {
+            objNovo.GetComponent<BossSpellController>().setSpeed(dir.x, dir.y, 4F);
+        } else {
+            objNovo.GetComponent<BossSpellController>().setSpeed(dir.x, dir.y, 8F);
         }
     }
 }

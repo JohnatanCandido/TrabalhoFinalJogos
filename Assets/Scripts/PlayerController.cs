@@ -77,8 +77,7 @@ public class PlayerController : MonoBehaviour {
 
     private void checaPulo() {
         if (Input.GetButtonDown("Jump") && !pulando) {
-            Vector2 forca = new Vector2(0, forcaAplicar);
-            rb.AddForce(forca);
+            pular(1F);
         }
         pulando = !Physics2D.Linecast(transform.position, refChao.position, mascara);
         anim.SetBool("Pulando", pulando);
@@ -125,32 +124,20 @@ public class PlayerController : MonoBehaviour {
 
         if (collider.tag == "Enemy") {
             colisaoEnemy(contactPoint, collider, center);
-        } else if (collider.tag == "Boss") {
-            colisaoBoss(contactPoint, center);
         }
     }
 
     private void colisaoEnemy(Vector3 contactPoint, Collider2D collider, Vector3 center) {
         if (contactPoint.y > center.y) {
-                Vector2 forca = new Vector2(0, forcaAplicar * 0.8F);
-                rb.AddForce(forca);
-            } else {
-                morrer();
+            pular(0.8F);
+        } else {
+            morrer();
         }
     }
 
     private void colisaoFish(GameObject gameObject) {
         fish = gameObject;
         morrer();
-    }
-
-    private void colisaoBoss(Vector3 contactPoint, Vector3 center) {
-        if (contactPoint.y > 1.6F) {
-            Vector2 forca = new Vector2(0, forcaAplicar);
-            rb.AddForce(forca);
-        } else {
-            morrer();
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -166,7 +153,12 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void morrer() {
+    public void pular(float multiplier) {
+        Vector2 forca = new Vector2(0, forcaAplicar * multiplier);
+        rb.AddForce(forca);
+    }
+
+    public void morrer() {
         morreu = true;
         anim.SetBool("Esmagado", true);
         timeOfEndgame = Time.time;
