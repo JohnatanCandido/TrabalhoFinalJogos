@@ -140,10 +140,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf2aa17006e75040945df0da05b311f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  objAttack: {fileID: 0}
+  refAttack: {fileID: 0}
+  somSpell: {fileID: 0}
   velocidade: 2
   tempoAnim: 2
   attack: 0
-  player: {fileID: 0}
+  deathPoint: 0
 --- !u!50 &2692554915988657030
 Rigidbody2D:
   serializedVersion: 4

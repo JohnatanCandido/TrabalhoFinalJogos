@@ -6,6 +6,16 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
 
     private Rigidbody2D rb;
+    public Transform refChao;
+    public LayerMask mascara;
+    private Animator anim;
+    private Camera camera;
+    private Material matFundo;
+    public Renderer renderer;
+    private GameObject fish;
+    public AudioClip somPulo;
+    public AudioClip somMorte;
+    private AudioSource audioSrc;
 
     public float forcaAplicar;
 
@@ -13,25 +23,11 @@ public class PlayerController : MonoBehaviour {
 
     private float ladoAnterior = 1F;
 
-    public Transform refChao;
-
-    public LayerMask mascara;
-
-    private Animator anim;
-
     private bool pulando;
-
-    private Camera camera;
-
-    private Material matFundo;
-
-    public Renderer renderer;
 
     public float velocidadeFundo;
 
     public bool morreu;
-
-    private GameObject fish;
 
     public float finishLine;
 
@@ -44,13 +40,14 @@ public class PlayerController : MonoBehaviour {
         timeOfEndgame = -1F;
         pulando = false;
         ganhou = false;
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        morreu = false;
         if (renderer != null) {
             camera = Camera.main;
             matFundo = renderer.material;
         }
-        morreu = false;
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        audioSrc = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -156,11 +153,13 @@ public class PlayerController : MonoBehaviour {
     public void pular(float multiplier) {
         Vector2 forca = new Vector2(0, forcaAplicar * multiplier);
         rb.AddForce(forca);
+        audioSrc.PlayOneShot(somPulo);
     }
 
     public void morrer() {
         morreu = true;
         anim.SetBool("Esmagado", true);
         timeOfEndgame = Time.time;
+        audioSrc.PlayOneShot(somMorte);
     }
 }

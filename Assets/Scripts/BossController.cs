@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour {
 
+    public AudioClip somSpell;
+    private AudioSource audioSrc;
+    private List<Vector3> positions;
+    private Animator anim;
+    private Rigidbody2D rb;
+    public GameObject player;
+    public GameObject objAttack;
+    public Transform refAttack;
+
     public int hp;
 
     public float speed;
-
-    private List<Vector3> positions;
 
     private int currPos;
 
@@ -19,17 +26,7 @@ public class BossController : MonoBehaviour {
 
     private int lastPosIndex;
 
-    private Animator anim;
-
-    private Rigidbody2D rb;
-
     private float lastAttack;
-
-    public GameObject player;
-
-    public GameObject objAttack;
-
-    public Transform refAttack;
 
     private float atkTime;
 
@@ -43,6 +40,7 @@ public class BossController : MonoBehaviour {
         atkTime = 2F;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        audioSrc = GetComponent<AudioSource>();
     }
 
     private void initBossPositions() {
@@ -155,5 +153,6 @@ public class BossController : MonoBehaviour {
         } else {
             objNovo.GetComponent<BossSpellController>().setSpeed(dir.x, dir.y, 8F);
         }
+        audioSrc.PlayOneShot(somSpell);
     }
 }

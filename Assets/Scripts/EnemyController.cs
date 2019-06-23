@@ -6,6 +6,11 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour {
 
     private Animator anim;
+    public GameObject player;
+    public GameObject objAttack;
+    public Transform refAttack;
+    public AudioClip somSpell;
+    private AudioSource audioSrc;
 
     private float posInicial;
 
@@ -19,24 +24,19 @@ public class EnemyController : MonoBehaviour {
 
     private float lastAttack;
 
-    public GameObject player;
-
     private float timeOfDeath;
 
     public float deathPoint;
-
-    public GameObject objAttack;
-
-    public Transform refAttack;
 
     private bool geraAttack;
 
     // Start is called before the first frame update
     void Start() {
-        anim = GetComponent<Animator>();
         posInicial = transform.position.x;
         lastAnim = Time.time;
         lastAttack = 0F;
+        anim = GetComponent<Animator>();
+        audioSrc = GetComponent<AudioSource>();
         anim.SetBool("Andando", false);
     }
 
@@ -97,6 +97,7 @@ public class EnemyController : MonoBehaviour {
             if (transform.localScale.x < 0) {
                 objNovo.GetComponent<EnemyFireController>().setDirecao(-1);
             }
+            audioSrc.PlayOneShot(somSpell);
         }
     }
 

@@ -5,17 +5,22 @@ using UnityEngine;
 
 public class FishController : MonoBehaviour {
 
+    private Rigidbody2D rb;
+    public AudioClip somPulo;
+    private AudioSource audioSrc;
+    public GameObject player;
+
     public float jumpTime;
 
     public float lastJump;
 
     public float jumpForce;
 
-    private Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody2D>();
+        audioSrc = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -24,6 +29,9 @@ public class FishController : MonoBehaviour {
             Vector2 forca = new Vector2(0, jumpForce);
             rb.AddForce(forca);
             lastJump = Time.time;
+            if (Math.Abs(player.transform.position.x - transform.position.x) < 11F) {
+                audioSrc.PlayOneShot(somPulo);
+            }
         }
         if (transform.position.y > 4.5F) {
             float escalaY = Math.Abs(transform.localScale.y) * -1;
