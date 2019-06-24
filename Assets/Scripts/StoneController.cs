@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class StoneController : MonoBehaviour {
 
+    private Rigidbody2D rb;
+    public GameObject player;
+
     public float velocidade;
 
     public float rotacao;
-
-    private Rigidbody2D rb;
-
-    public GameObject player;
 
     // Start is called before the first frame update
     void Start() {

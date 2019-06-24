@@ -6,6 +6,7 @@ using UnityEngine;
 public class BossController : MonoBehaviour {
 
     public AudioClip somSpell;
+    public AudioClip somRisada;
     private AudioSource audioSrc;
     private List<Vector3> positions;
     private Animator anim;
@@ -34,13 +35,13 @@ public class BossController : MonoBehaviour {
     void Start() {
         currPos = -1;
         lastPosIndex = -1;
-        initBossPositions();
         lastPosTime = Time.time;
         lastAttack = Time.time;
         atkTime = 2F;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         audioSrc = GetComponent<AudioSource>();
+        initBossPositions();
     }
 
     private void initBossPositions() {
@@ -112,6 +113,7 @@ public class BossController : MonoBehaviour {
             } catch {}
         } else {
             other.gameObject.GetComponent<PlayerController>().morrer();
+            rir();
         }
     }
 
@@ -154,5 +156,9 @@ public class BossController : MonoBehaviour {
             objNovo.GetComponent<BossSpellController>().setSpeed(dir.x, dir.y, 8F);
         }
         audioSrc.PlayOneShot(somSpell);
+    }
+
+    public void rir() {
+        audioSrc.PlayOneShot(somRisada);
     }
 }

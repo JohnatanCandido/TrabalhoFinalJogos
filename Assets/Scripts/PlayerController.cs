@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour {
             transform.position = new Vector3(fish.transform.position.x, fish.transform.position.y + 1, fish.transform.position.z);
         }
 
-        if (timeOfEndgame > 0 && Time.time - timeOfEndgame > 2F) {
+        if (timeOfEndgame > 0 && Time.time - timeOfEndgame > 3F) {
             if (morreu) {
                MainController.die();
             } else if (ganhou) {
@@ -146,6 +146,7 @@ public class PlayerController : MonoBehaviour {
             Destroy(other.gameObject);
             if (!morreu) {
                 morrer();
+                GameObject.Find("Boss").GetComponent<BossController>().rir();
             }
         }
     }

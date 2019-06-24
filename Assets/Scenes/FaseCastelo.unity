@@ -319,6 +319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   somSpell: {fileID: 8300000, guid: 27709785093efe04e9085f14020e100f, type: 3}
+  somRisada: {fileID: 8300000, guid: 38fb061559b2d5541882eb2b09154344, type: 3}
   player: {fileID: 1441998810}
   objAttack: {fileID: 3658571471065618597, guid: be577fc2288390944815eec6bd49bc4b,
     type: 3}
