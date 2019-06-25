@@ -112,7 +112,7 @@ public class BossController : MonoBehaviour {
                 }
             } catch {}
         } else {
-            other.gameObject.GetComponent<PlayerController>().morrer();
+            other.gameObject.GetComponent<PlayerController>().morrer(false);
             rir();
         }
     }

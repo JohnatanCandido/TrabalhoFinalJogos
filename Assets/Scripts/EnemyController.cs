@@ -85,7 +85,7 @@ public class EnemyController : MonoBehaviour {
 
     private void checaAtacar() {
         mudaDirecao();
-        if (Math.Abs(player.transform.position.x - transform.position.x) < 11F && Time.time - lastAttack > 2.5F) {
+        if (Math.Abs(player.transform.position.x - transform.position.x) < 11F && Time.time - lastAttack > 2F) {
             geraAttack = true;
             anim.SetBool("Atacar", true);
             lastAttack = Time.time;

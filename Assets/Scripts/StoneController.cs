@@ -19,7 +19,7 @@ public class StoneController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (player.transform.position.x > -15F) {
-            transform.position = new Vector3(transform.position.x + velocidade, transform.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x + (velocidade * Time.deltaTime), transform.position.y, transform.position.z);
             rb.rotation -= rotacao;
         }
     }

@@ -12,6 +12,7 @@ TagManager:
   - Boss
   - FundoFaseTrem
   - Spell
+  - BossSpell
   layers:
   - Default
   - TransparentFX
@@ -46,6 +47,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: ImgFundoInicio
+    uniqueID: 3595714557
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

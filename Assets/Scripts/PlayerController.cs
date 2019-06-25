@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour {
 
     private void checaMovimento() {
         if (transform.position.y < 0F) {
-            morrer();
+            morrer(false);
             return;
         }
         float deslocX = Input.GetAxisRaw("Horizontal");
@@ -128,26 +128,26 @@ public class PlayerController : MonoBehaviour {
         if (contactPoint.y > center.y) {
             pular(0.8F);
         } else {
-            morrer();
+            morrer(false);
         }
     }
 
     private void colisaoFish(GameObject gameObject) {
         fish = gameObject;
-        morrer();
+        morrer(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.tag == "Pedra" || other.gameObject.tag == "Trap") {
-            morrer();
+            morrer(false);
         } else if (other.gameObject.tag == "Fish") {
             colisaoFish(other.gameObject);
+        } else if (other.gameObject.tag == "BossSpell") {
+            Destroy(other.gameObject);
+            morrer(true);
         } else if (other.gameObject.tag == "Spell") {
             Destroy(other.gameObject);
-            if (!morreu) {
-                morrer();
-                GameObject.Find("Boss").GetComponent<BossController>().rir();
-            }
+            morrer(false);
         }
     }
 
@@ -157,10 +157,15 @@ public class PlayerController : MonoBehaviour {
         audioSrc.PlayOneShot(somPulo);
     }
 
-    public void morrer() {
-        morreu = true;
-        anim.SetBool("Esmagado", true);
-        timeOfEndgame = Time.time;
-        audioSrc.PlayOneShot(somMorte);
+    public void morrer(bool rir) {
+        if (!morreu) {
+            morreu = true;
+            anim.SetBool("Esmagado", true);
+            timeOfEndgame = Time.time;
+            audioSrc.PlayOneShot(somMorte);
+            if (rir) {
+                GameObject.Find("Boss").GetComponent<BossController>().rir();
+            }
+        }
     }
 }
