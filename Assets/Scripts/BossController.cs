@@ -14,6 +14,9 @@ public class BossController : MonoBehaviour {
     public GameObject player;
     public GameObject objAttack;
     public Transform refAttack;
+    public AudioClip winSound;
+    public GameObject princesa;
+    public GameObject smoke;
 
     public int hp;
 
@@ -31,8 +34,13 @@ public class BossController : MonoBehaviour {
 
     private float atkTime;
 
+    private float deathTime;
+
+    private bool spawnar = true;
+
     // Start is called before the first frame update
     void Start() {
+        deathTime = -1F;
         currPos = -1;
         lastPosIndex = -1;
         lastPosTime = Time.time;
@@ -66,7 +74,7 @@ public class BossController : MonoBehaviour {
                 atirar();
             }
         }
-
+        spawnPrincesa();
     }
 
     private void checaDirecao() {
@@ -97,15 +105,23 @@ public class BossController : MonoBehaviour {
 
         if (contactPoint.y < center.y) {
             try {
-                other.gameObject.GetComponent<PlayerController>().pular(1.5F);
                 if (other.gameObject.GetComponent<PlayerController>().morreu) {
                     return;
                 }
                 hp--;
                 print("HP: " + hp);
+
+                if (!anim.GetBool("Morreu")) {
+                    other.gameObject.GetComponent<PlayerController>().pular(1.5F);
+                }
                 if (hp == 0) {
+                    spawnSmoke();
+                    deathTime = Time.time;
+                    audioSrc.PlayOneShot(winSound);
+                    GameObject.Find("Chao").GetComponent<AudioSource>().Stop();
                     anim.SetBool("Morreu", true);
                     rb.gravityScale = 1;
+                    player.GetComponent<PlayerController>().ganhar();
                 } else {
                     rb.gravityScale = 0;
                     changePosition();
@@ -114,6 +130,21 @@ public class BossController : MonoBehaviour {
         } else {
             other.gameObject.GetComponent<PlayerController>().morrer(false);
             rir();
+        }
+    }
+
+    private void spawnSmoke() {
+        if (!anim.GetBool("Morreu")) {
+            GameObject spawn = GameObject.Find("SmokeSpawn");
+            Instantiate(smoke, spawn.transform.position, spawn.transform.rotation);
+        }
+    }
+
+    private void spawnPrincesa() {
+        if (anim.GetBool("Morreu") && spawnar && Time.time - deathTime > 0.5F) {
+            spawnar = false;
+            GameObject spawn = GameObject.Find("PrincesaSpawn");
+            Instantiate(princesa, spawn.transform.position, spawn.transform.rotation);
         }
     }
 
@@ -161,4 +192,5 @@ public class BossController : MonoBehaviour {
     public void rir() {
         audioSrc.PlayOneShot(somRisada);
     }
+
 }

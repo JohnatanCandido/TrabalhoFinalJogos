@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
     public AudioClip somPulo;
     public AudioClip somMorte;
     private AudioSource audioSrc;
+    private GameObject textoFinal;
+    private GameObject fundoBranco;
 
     public float forcaAplicar;
 
@@ -48,14 +50,19 @@ public class PlayerController : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         audioSrc = GetComponent<AudioSource>();
+        if (SceneManager.GetActiveScene().buildIndex == 4) {
+            fundoBranco = GameObject.Find("FundoBranco");
+            textoFinal = GameObject.Find("TextoFinal");
+            fundoBranco.SetActive(false);
+            textoFinal.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update() {
         if (!morreu && !ganhou) {
             if (transform.position.x > finishLine) {
-                ganhou = true;
-                timeOfEndgame = Time.time;
+                ganhar();
             }
             checaPulo();
             checaMovimento();
@@ -66,8 +73,10 @@ public class PlayerController : MonoBehaviour {
         if (timeOfEndgame > 0 && Time.time - timeOfEndgame > 3F) {
             if (morreu) {
                MainController.die();
-            } else if (ganhou) {
+            } else if (ganhou && SceneManager.GetActiveScene().buildIndex != 4) {
                 MainController.win();
+            } else if (Time.time - timeOfEndgame > 5F && ganhou && SceneManager.GetActiveScene().buildIndex == 4) {
+                mostrarTelaFinal();
             }
         }
     }
@@ -167,5 +176,15 @@ public class PlayerController : MonoBehaviour {
                 GameObject.Find("Boss").GetComponent<BossController>().rir();
             }
         }
+    }
+
+    public void ganhar() {
+        ganhou = true;
+        timeOfEndgame = Time.time;
+    }
+
+    private void mostrarTelaFinal() {
+        fundoBranco.SetActive(true);
+        textoFinal.SetActive(true);
     }
 }

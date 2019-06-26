@@ -17,6 +17,8 @@ public class MainController : MonoBehaviour {
                 nextLevel();
             } else if (SceneManager.GetActiveScene().name == "TelaVoceMorreu") {
                 tryAgain();
+            } else if (SceneManager.GetActiveScene().name == "FaseCastelo") {
+                SceneManager.LoadScene(0);
             }
         }
     }
