@@ -12,7 +12,9 @@ public class FishController : MonoBehaviour {
 
     public float jumpTime;
 
-    public float lastJump;
+    public float jumpDelay;
+
+    private float lastJump;
 
     public float jumpForce;
 
@@ -21,6 +23,7 @@ public class FishController : MonoBehaviour {
     void Start() {
         rb = GetComponent<Rigidbody2D>();
         audioSrc = GetComponent<AudioSource>();
+        lastJump = Time.time + jumpDelay;
     }
 
     // Update is called once per frame
